@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from PIL import Image
-# NOVO: Imports necessários para a leitura segura de dados
+# Imports necessários para a leitura segura de dados
 import requests
 from io import BytesIO
 
@@ -60,8 +60,7 @@ st.markdown("""
 # 2. CARREGAMENTO DE DADOS E FUNÇÕES
 # ==============================================================================
 
-# FUNÇÃO DE CARREGAMENTO SEGURO (substitui a antiga)
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=600) # Cache de 10 minutos
 def carregar_dados_privados():
     """Carrega a planilha de um repositório privado do GitHub usando um token."""
     try:
@@ -93,7 +92,6 @@ def carregar_dados_privados():
         st.error(f"Falha ao acessar os dados privados do GitHub. Código de Status: {response.status_code}. Verifique o Token e a URL Raw.")
         return pd.DataFrame()
 
-# CHAMANDO A FUNÇÃO DE CARREGAMENTO SEGURO
 df = carregar_dados_privados()
 
 # Paleta de Cores Mosaic
@@ -128,7 +126,7 @@ if not df.empty:
     df_filtrado = df_filtrado[(df_filtrado['Data de lançamento'].dt.date >= data_inicio) & (df_filtrado['Data de lançamento'].dt.date <= data_fim)]
 
     # ==============================================================================
-    # 4. LAYOUT PRINCIPAL DO DASHBOARD (A VERSÃO COMPLETA QUE VOCÊ GOSTOU)
+    # 4. LAYOUT PRINCIPAL DO DASHBOARD
     # ==============================================================================
 
     st.markdown('<p class="main-header">Dashboard Corporativo de Custos</p>', unsafe_allow_html=True)
@@ -179,4 +177,4 @@ if not df.empty:
         st.dataframe(df_filtrado[colunas_existentes].style.format({"Valor/MR": "R$ {:,.2f}", "Data de lançamento": "{:%d/%m/%Y}"}))
         st.markdown('</div>', unsafe_allow_html=True)
 else:
-    st.warning("Aguardando o carregamento e a configuração dos dados...")
+    st.warning("Aguardando o carregamento dos dados... Se esta mensagem persistir, verifique a configuração de segredos.")
